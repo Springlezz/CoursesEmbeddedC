@@ -30,7 +30,7 @@ task1:
 	movl	-4(%rbp), %eax
 	movl	-20(%rbp), %edx
 	movl	%eax, %ecx
-	sarl	%cl, %edx
+	shrl	%cl, %edx
 	movl	%edx, %eax
 	andl	$1, %eax
 	movl	%eax, result(%rip)
@@ -77,7 +77,7 @@ task2:
 	movl	%edi, -20(%rbp)
 	movl	$31, -4(%rbp)
 	jmp	.L6
-.L7:
+.L8:
 	movl	-4(%rbp), %eax
 	movl	-20(%rbp), %edx
 	movl	%eax, %ecx
@@ -85,6 +85,15 @@ task2:
 	movl	%edx, %eax
 	andl	$1, %eax
 	movl	%eax, result(%rip)
+	movl	-4(%rbp), %eax
+	andl	$7, %eax
+	testl	%eax, %eax
+	jne	.L7
+	cmpl	$0, -4(%rbp)
+	je	.L7
+	movl	$32, %edi
+	call	putchar@PLT
+.L7:
 	movl	result(%rip), %eax
 	movl	%eax, %esi
 	leaq	.LC0(%rip), %rax
@@ -94,7 +103,7 @@ task2:
 	subl	$1, -4(%rbp)
 .L6:
 	cmpl	$0, -4(%rbp)
-	jns	.L7
+	jns	.L8
 	movl	$10, %edi
 	call	putchar@PLT
 	nop
@@ -122,9 +131,10 @@ task3:
 	.cfi_def_cfa_register 6
 	subq	$32, %rsp
 	movl	%edi, -20(%rbp)
+	movl	$0, -8(%rbp)
 	movl	$31, -4(%rbp)
-	jmp	.L9
-.L12:
+	jmp	.L10
+.L13:
 	movl	-4(%rbp), %eax
 	movl	-20(%rbp), %edx
 	movl	%eax, %ecx
@@ -134,18 +144,18 @@ task3:
 	movl	%eax, result(%rip)
 	movl	result(%rip), %eax
 	cmpl	$1, %eax
-	jne	.L10
+	jne	.L11
 	addl	$1, -8(%rbp)
-.L10:
+.L11:
 	movl	-4(%rbp), %eax
 	andl	$7, %eax
 	testl	%eax, %eax
-	jne	.L11
+	jne	.L12
 	cmpl	$0, -4(%rbp)
-	je	.L11
+	je	.L12
 	movl	$32, %edi
 	call	putchar@PLT
-.L11:
+.L12:
 	movl	result(%rip), %eax
 	movl	%eax, %esi
 	leaq	.LC0(%rip), %rax
@@ -153,9 +163,9 @@ task3:
 	movl	$0, %eax
 	call	printf@PLT
 	subl	$1, -4(%rbp)
-.L9:
+.L10:
 	cmpl	$0, -4(%rbp)
-	jns	.L12
+	jns	.L13
 	movl	$10, %edi
 	call	putchar@PLT
 	movl	-8(%rbp), %eax
@@ -173,6 +183,14 @@ task3:
 	.cfi_endproc
 .LFE2:
 	.size	task3, .-task3
+	.section	.rodata
+	.align 8
+.LC2:
+	.string	"\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\207\320\270\321\201\320\273\320\276 \320\264\320\273\321\217 \320\267\320\260\320\274\320\265\320\275\321\213, 255 - \320\274\320\260\320\272\321\201\320\270\320\274\320\260\320\273\321\214\320\275\320\276\320\265 \320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265, \321\207\321\202\320\276 \320\277\320\276\320\274\320\265\321\211\320\260\320\265\321\202\321\201\321\217 \320\262 1 \320\261\320\260\320\271\321\202: "
+	.align 8
+.LC3:
+	.string	"\320\236\321\210\320\270\320\261\320\272\320\260! \320\262\320\262\320\265\320\264\320\270\321\202\320\265 \320\261\320\260\320\271\321\202 \320\276\321\202 0 \320\264\320\276 255"
+	.text
 	.globl	task4
 	.type	task4, @function
 task4:
@@ -184,8 +202,76 @@ task4:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	nop
-	popq	%rbp
+	subq	$32, %rsp
+	movl	%edi, -20(%rbp)
+	movq	%fs:40, %rax
+	movq	%rax, -8(%rbp)
+	xorl	%eax, %eax
+	movl	$0, -16(%rbp)
+	leaq	.LC2(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	printf@PLT
+	leaq	-16(%rbp), %rax
+	movq	%rax, %rsi
+	leaq	.LC0(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	__isoc99_scanf@PLT
+	movl	-16(%rbp), %eax
+	testl	%eax, %eax
+	js	.L15
+	movl	-16(%rbp), %eax
+	cmpl	$255, %eax
+	jle	.L16
+.L15:
+	leaq	.LC3(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+	jmp	.L14
+.L16:
+	andl	$16777215, -20(%rbp)
+	movl	-16(%rbp), %eax
+	sall	$24, %eax
+	orl	%eax, -20(%rbp)
+	movl	$31, -12(%rbp)
+	jmp	.L18
+.L20:
+	movl	-12(%rbp), %eax
+	movl	-20(%rbp), %edx
+	movl	%eax, %ecx
+	shrl	%cl, %edx
+	movl	%edx, %eax
+	andl	$1, %eax
+	movl	%eax, result(%rip)
+	movl	result(%rip), %eax
+	movl	%eax, %esi
+	leaq	.LC0(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	printf@PLT
+	movl	-12(%rbp), %eax
+	andl	$7, %eax
+	testl	%eax, %eax
+	jne	.L19
+	cmpl	$0, -12(%rbp)
+	je	.L19
+	movl	$32, %edi
+	call	putchar@PLT
+.L19:
+	subl	$1, -12(%rbp)
+.L18:
+	cmpl	$0, -12(%rbp)
+	jns	.L20
+	movl	$10, %edi
+	call	putchar@PLT
+.L14:
+	movq	-8(%rbp), %rax
+	subq	%fs:40, %rax
+	je	.L21
+	call	__stack_chk_fail@PLT
+.L21:
+	leave
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
@@ -193,16 +279,21 @@ task4:
 	.size	task4, .-task4
 	.section	.rodata
 	.align 8
-.LC2:
-	.string	"\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\275\320\276\320\274\320\265\321\200 \320\267\320\260\320\264\320\260\321\207\320\270: "
-.LC3:
-	.string	"\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\207\320\270\321\201\320\273\320\276: "
-	.align 8
 .LC4:
+	.string	"\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\275\320\276\320\274\320\265\321\200 \320\267\320\260\320\264\320\260\321\207\320\270: "
+.LC5:
+	.string	"\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\207\320\270\321\201\320\273\320\276: "
+.LC6:
+	.string	"%u"
+	.align 8
+.LC7:
+	.string	"\320\247\320\270\321\201\320\273\320\276 \320\264\320\276\320\273\320\266\320\275\320\276 \320\261\321\213\321\202\321\214 \321\206\320\265\320\273\321\213\320\274 \320\270 \320\276\321\202\321\200\320\270\321\206\320\260\321\202\320\265\320\273\321\214\320\275\321\213\320\274"
+	.align 8
+.LC8:
 	.string	"\320\247\320\270\321\201\320\273\320\276 \320\264\320\276\320\273\320\266\320\275\320\276 \320\261\321\213\321\202\321\214 \321\206\320\265\320\273\321\213\320\274 \320\270 \320\277\320\276\320\273\320\276\320\266\320\270\321\202\320\265\320\273\321\214\320\275\321\213\320\274"
 	.align 8
-.LC5:
-	.string	"\320\247\320\270\321\201\320\273\320\276 \320\264\320\276\320\273\320\266\320\275\320\276 \320\261\321\213\321\202\321\214 \321\206\320\265\320\273\321\213\320\274 \320\270 \320\276\321\202\321\200\320\270\321\206\320\260\321\202\320\265\320\273\321\214\320\275\321\213\320\274"
+.LC9:
+	.string	"\320\242\320\260\320\272\320\276\320\270\314\206 \320\267\320\260\320\264\320\260\321\207\320\270 \320\275\320\265\321\202"
 	.text
 	.globl	main
 	.type	main, @function
@@ -215,11 +306,11 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	subq	$16, %rsp
+	subq	$32, %rsp
 	movq	%fs:40, %rax
 	movq	%rax, -8(%rbp)
 	xorl	%eax, %eax
-	leaq	.LC2(%rip), %rax
+	leaq	.LC4(%rip), %rax
 	movq	%rax, %rdi
 	movl	$0, %eax
 	call	printf@PLT
@@ -230,96 +321,107 @@ main:
 	movl	$0, %eax
 	call	__isoc99_scanf@PLT
 	movl	-12(%rbp), %eax
+	cmpl	$4, %eax
+	je	.L23
+	cmpl	$4, %eax
+	jg	.L24
 	cmpl	$3, %eax
-	je	.L15
+	je	.L25
 	cmpl	$3, %eax
-	jg	.L28
+	jg	.L24
 	cmpl	$1, %eax
-	je	.L17
+	je	.L26
 	cmpl	$2, %eax
-	je	.L18
-	jmp	.L28
-.L17:
-	leaq	.LC3(%rip), %rax
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	printf@PLT
-	leaq	-16(%rbp), %rax
-	movq	%rax, %rsi
-	leaq	.LC0(%rip), %rax
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	__isoc99_scanf@PLT
-	movl	-16(%rbp), %eax
-	testl	%eax, %eax
-	js	.L19
-	movl	-16(%rbp), %eax
-	movl	%eax, %edi
-	call	task1
-	jmp	.L21
-.L19:
-	leaq	.LC4(%rip), %rax
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	printf@PLT
-	jmp	.L21
-.L18:
-	leaq	.LC3(%rip), %rax
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	printf@PLT
-	leaq	-16(%rbp), %rax
-	movq	%rax, %rsi
-	leaq	.LC0(%rip), %rax
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	__isoc99_scanf@PLT
-	movl	-16(%rbp), %eax
-	testl	%eax, %eax
-	jns	.L22
-	movl	-16(%rbp), %eax
-	movl	%eax, %edi
-	call	task2
-	jmp	.L21
-.L22:
+	je	.L27
+	jmp	.L24
+.L26:
 	leaq	.LC5(%rip), %rax
 	movq	%rax, %rdi
 	movl	$0, %eax
 	call	printf@PLT
-	jmp	.L21
-.L15:
-	leaq	.LC3(%rip), %rax
+	leaq	-16(%rbp), %rax
+	movq	%rax, %rsi
+	leaq	.LC6(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	__isoc99_scanf@PLT
+	movl	-16(%rbp), %eax
+	movl	%eax, %edi
+	call	task1
+	jmp	.L28
+.L27:
+	leaq	.LC5(%rip), %rax
 	movq	%rax, %rdi
 	movl	$0, %eax
 	call	printf@PLT
-	leaq	-16(%rbp), %rax
+	leaq	-20(%rbp), %rax
 	movq	%rax, %rsi
 	leaq	.LC0(%rip), %rax
 	movq	%rax, %rdi
 	movl	$0, %eax
 	call	__isoc99_scanf@PLT
-	movl	-16(%rbp), %eax
+	movl	-20(%rbp), %eax
 	testl	%eax, %eax
-	js	.L24
-	movl	-16(%rbp), %eax
+	jns	.L29
+	movl	-20(%rbp), %eax
 	movl	%eax, %edi
-	call	task3
-	jmp	.L21
-.L24:
-	leaq	.LC4(%rip), %rax
+	call	task2
+	jmp	.L28
+.L29:
+	leaq	.LC7(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+	jmp	.L28
+.L25:
+	leaq	.LC5(%rip), %rax
 	movq	%rax, %rdi
 	movl	$0, %eax
 	call	printf@PLT
-	jmp	.L21
-.L28:
+	leaq	-20(%rbp), %rax
+	movq	%rax, %rsi
+	leaq	.LC0(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	__isoc99_scanf@PLT
+	movl	-20(%rbp), %eax
+	testl	%eax, %eax
+	js	.L31
+	movl	-20(%rbp), %eax
+	movl	%eax, %edi
+	call	task3
+	jmp	.L28
+.L31:
+	leaq	.LC8(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+	jmp	.L28
+.L23:
+	leaq	.LC5(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	printf@PLT
+	leaq	-16(%rbp), %rax
+	movq	%rax, %rsi
+	leaq	.LC6(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	__isoc99_scanf@PLT
+	movl	-16(%rbp), %eax
+	movl	%eax, %edi
+	call	task4
+	jmp	.L28
+.L24:
+	leaq	.LC9(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
 	nop
-.L21:
+.L28:
 	movl	$0, %eax
 	movq	-8(%rbp), %rdx
 	subq	%fs:40, %rdx
-	je	.L27
+	je	.L34
 	call	__stack_chk_fail@PLT
-.L27:
+.L34:
 	leave
 	.cfi_def_cfa 7, 8
 	ret
