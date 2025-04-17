@@ -53,8 +53,7 @@ task1:
 .L2:
 	cmpl	$0, -4(%rbp)
 	jns	.L4
-	movl	$10, %edi
-	call	putchar@PLT
+	nop
 	nop
 	leave
 	.cfi_def_cfa 7, 8
@@ -104,8 +103,7 @@ task2:
 .L6:
 	cmpl	$0, -4(%rbp)
 	jns	.L8
-	movl	$10, %edi
-	call	putchar@PLT
+	nop
 	nop
 	leave
 	.cfi_def_cfa 7, 8
@@ -174,8 +172,6 @@ task3:
 	movq	%rax, %rdi
 	movl	$0, %eax
 	call	printf@PLT
-	movl	$10, %edi
-	call	putchar@PLT
 	nop
 	leave
 	.cfi_def_cfa 7, 8
@@ -263,8 +259,6 @@ task4:
 .L18:
 	cmpl	$0, -12(%rbp)
 	jns	.L20
-	movl	$10, %edi
-	call	putchar@PLT
 .L14:
 	movq	-8(%rbp), %rax
 	subq	%fs:40, %rax
@@ -416,6 +410,8 @@ main:
 	call	puts@PLT
 	nop
 .L28:
+	movl	$10, %edi
+	call	putchar@PLT
 	movl	$0, %eax
 	movq	-8(%rbp), %rdx
 	subq	%fs:40, %rdx

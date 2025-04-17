@@ -10,7 +10,6 @@ void task1(unsigned int unum){
         }
         printf("%d", result);
     }
-    printf("\n");
 }
 void task2(int num){
     for (int i = 31; i >= 0; i--){
@@ -20,7 +19,7 @@ void task2(int num){
         }
         printf("%d", result);
     }
-    printf("\n");
+    
 } 
 void task3(int num){
     int counter = 0;
@@ -36,7 +35,6 @@ void task3(int num){
     }
     printf("\n");
     printf("Количество единиц: %d", counter);
-    printf("\n");
 } 
 void task4(unsigned int unum){
     int replace = 0;
@@ -55,7 +53,6 @@ void task4(unsigned int unum){
             printf(" ");
         }
     }
-    printf("\n");
 } 
 
 int main() {
@@ -109,6 +106,7 @@ int main() {
         printf("Такой задачи нет\n");
         break;
     }
+    printf("\n");
     return 0;
 }
 
