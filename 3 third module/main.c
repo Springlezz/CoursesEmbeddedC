@@ -63,7 +63,6 @@ void task4() {
     fgets(string, max_string, stdin);
     fixRemovenewline(string);
 
-    
     printf("Введите подстроку:\n");
     fgets(substring, max_string, stdin);
     fixRemovenewline(substring);
