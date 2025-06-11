@@ -2,13 +2,16 @@
 #define max_string 125
 void task1(){
     unsigned int num;
-    unsigned char byte;
+    unsigned int byteInput;
     printf("Введите положительное число: ");
     scanf("%u", &num);
     printf("Введите байт: ");
-    scanf("%hhu", &byte);
-    unsigned char *nump = (unsigned char *)&num;
-    nump[2] = byte;
+    scanf("%u", &byteInput);
+
+    unsigned char byte = (unsigned char)byteInput;
+    unsigned char *numptr = (unsigned char*)&num;
+
+    numptr[2] = byte;
     printf("Результат: %u\n", num);
     printf("В 16-ричной системе: 0x%08X\n", num);
     return;
