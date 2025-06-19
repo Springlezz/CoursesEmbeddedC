@@ -11,14 +11,13 @@ struct abonent {
 int str_equal(char string1[], char string2[]) {
     int i = 0;
     while (string1[i] != '\0' && string2[i] != '\0') {
-        if (string1[i] != string2[i])
+        if (string1[i] != string2[i]){
             return 0;
+        }
         i++;
     }
     return string1[i] == '\0' && string2[i] == '\0';
 }
-
-
 
 int is_empty(struct abonent *ptr) {
     return ptr->name[0] == '\0';
@@ -45,19 +44,18 @@ void add_abonent(struct abonent list[]) {
     }
     printf("Справочник переполнен, нельзя добавить свыше 100 записей\n");
 }
-
 void print_all(struct abonent list[]) {
     int empty = 1;
     for (int i = 0; i < MAX_ABONENTS; i++) {
         if (!is_empty(&list[i])) {
-            printf("%d %s %s %s\n", i + 1, list[i].name, list[i].second_name, list[i].tel); //i + 1 - номер абонента, чтоб начинался не с 0
+            printf("%d %s %s %s\n", i + 1, list[i].name, list[i].second_name, list[i].tel);
             empty = 0;
         }
     }
-    if (empty)
-        printf("Справочник пуст.\n");
+    if (empty){
+        printf("Справочник пуст\n");
+    }
 }
-
 void delete_abonent(struct abonent list[]) {
     char name[125];
     char second_name[125];
@@ -68,7 +66,7 @@ void delete_abonent(struct abonent list[]) {
     for (int i = 0; i < MAX_ABONENTS; i++) {
         if (!is_empty(&list[i]) && str_equal(list[i].name, name) && str_equal(list[i].second_name, second_name)) {
             clear_abonent(&list[i]);
-            printf("Абонент %s %s удалён.\n", name, second_name);
+            printf("Абонент %s %s удалён\n", name, second_name);
             return;
         }
     }
@@ -79,7 +77,7 @@ void search_abonent(struct abonent list[]) { //Я не делала прирав
     char search_name[125];
     int found = 0;
     printf("Введите имя для поиска: ");
-    scanf("%124s", search_name); //124 - максимальная длина строки, ибо мы не знаем сколько символов в имени + 1 для нулевого символа
+    scanf("%124s", search_name);
     for (int i = 0; i < MAX_ABONENTS; i++) {
         if (!is_empty(&list[i]) && str_equal(list[i].name, search_name)) {
             printf("%d. %s %s - %s\n", i + 1, list[i].name, list[i].second_name, list[i].tel);
