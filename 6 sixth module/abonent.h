@@ -1,6 +1,6 @@
 #ifndef ABONENT
 #define ABONENT
-#include <string>
+
 struct abonent {
     char name [10];
     char second_name [10];
