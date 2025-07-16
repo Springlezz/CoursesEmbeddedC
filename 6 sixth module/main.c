@@ -43,7 +43,7 @@ int main() {
             break;
         }
         default:
-            perror("Такой кнопки нет\n");
+            printf("Такой кнопки нет\n");
             break;
         }  
     } while (task != 5);
