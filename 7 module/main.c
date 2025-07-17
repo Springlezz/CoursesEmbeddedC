@@ -33,14 +33,14 @@ int main(void)
                 break;
             }
             case (4):{
-                if (b == 0){
-                    printf("На нуль делить нельзя\n");
-                    break;
-                }
                 printf("Введите первое число: ");
                 scanf("%d", &a);
                 printf("Введите второе число: ");
                 scanf("%d", &b);
+                if (b == 0){
+                    printf("На нуль делить нельзя\n");
+                    break;
+                }
                 printf("Результат: %d\n", div(a, b));
                 break;
             }
