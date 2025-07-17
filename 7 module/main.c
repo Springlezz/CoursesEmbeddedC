@@ -44,6 +44,9 @@ int main(void)
                 printf("Результат: %d\n", div(a, b));
                 break;
             }
+            case (5):{
+                break;
+            }
             default:{
                 printf("Такого действия нет\n");
                 break;
