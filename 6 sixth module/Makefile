@@ -1,6 +1,6 @@
 BIN := main
 SRC := main.c abonent.c
-OBJ := $(SRC:.c=.o)
+OBJ := main.o abonent.o
 HDR := abonent.h
 
 CC := gcc
