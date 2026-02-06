@@ -3,3 +3,4 @@
 output.txt
 **/main
 *.o
+.DS_Store
